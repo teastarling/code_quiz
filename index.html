@@ -9,16 +9,20 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
+    <div class = starter>
+        <h2 id=startTitle></h2>
+        <button id=startBtn></button>
+    </div>
     <!-- container for entire quiz area -->
     <div class="quizContainer">
         <!-- container for question area -->
         <div class="questionContainer">
             <h2 id=question></h2>
             <div class=btngrp>
-                <button id="optionA"></button>
-                <button id="optionB"></button>
-                <button id="optionC"></button>
-                <button id="optionD"></button>
+                <button id="optionA" onClick="answerCheck('a')"></button>
+                <button id="optionB" onClick="answerCheck('b')"></button>
+                <button id="optionC" onClick="answerCheck('c')"></button>
+                <button id="optionD" onClick="answerCheck('d')"></button>
             </div>
         </div>
     </div>
