@@ -5,10 +5,12 @@ var optionB = document.getElementById('optionB');
 var optionC = document.getElementById('optionC');
 var optionD = document.getElementById('optionD');
 
+var score = document.getElementById("score");
+var timerElement = document.getElementById("timer")
+
 var starter = document.getElementById('starter');
 var startTitle = document.getElementById('startTitle');
 var startBtn = document.getElementById('startBtn');
-
 
 // Question object
 var quesList = [ {
@@ -27,13 +29,16 @@ var quesList = [ {
     }
 ]
 
-// var score = 0;
+var scoreCounter = 0;
 var currentQuestion = 0;
-
+var youWin = false;
+var timerCount;
+var timer;
 
 
 
 function starterPosition() {
+    getScore();
 
     question.style.visibility = "hidden";
     optionA.style.visibility = "hidden";
@@ -55,6 +60,10 @@ function starterPosition() {
 }
 
 function displayQuestion() {
+    youWin = false;
+    timerCount = 70;
+    startTimer();
+
     var q = quesList[currentQuestion];
     console.log(currentQuestion);
 
@@ -88,6 +97,11 @@ function winner() {
     startTitle.style.fontSize = "x-large";
     startTitle.innerHTML = "YOU WIN!";
 
+    youWin = true;
+
+    scoreCounter++;
+    setScore();
+    
     return;
 }
 
@@ -98,9 +112,9 @@ function answerCheck(x) {
     } else if ((x === quesList[currentQuestion].answer) && (currentQuestion === (quesList.length - 1))) {
         console.log("a winner is you");
         winner();
-    } //else {
-    //     answerWrong()
-    // }
+    } else {
+       answerWrong();
+    }
 }
 console.log(currentQuestion)
 
@@ -109,9 +123,41 @@ function answerCorrect() {
     displayQuestion();
 }
 
-// function answerWrong () {
-//     timer - 10
-// }
+function getScore() {
+    var storedScore = localStorage.getItem("scoreCount");
+
+    if (storedScore === null) {
+        scoreCounter = 0;
+    } else {
+        scoreCounter = storedScore;
+    }
+    
+    score.innerHTML = scoreCounter;
+}
+
+function setScore() {
+    score.textContent = scoreCounter;
+    localStorage.setItem("scoreCount", scoreCounter)
+}
+
+function startTimer() {
+    timer = setInterval(function() {
+      timerCount--;
+      timerElement.textContent = timerCount;
+      if (timerCount >= 0) {
+        if (youWin && timerCount > 0) {
+          clearInterval(timer);
+        }
+      }
+      if (timerCount === 0) {
+        clearInterval(timer);
+      }
+    }, 1000);
+  }
+
+function answerWrong () {
+    timerCount -= 10;
+}
 
 starterPosition();
 
