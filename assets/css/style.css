@@ -1,0 +1,5 @@
+/* Setting font style for page - all other CSS done through Bootstrap on HTML page */
+body {
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
