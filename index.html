@@ -9,8 +9,8 @@
     <link rel="stylesheet" href="./assets/css/style.css">
 </head>
 <body>
-    <div class="scoreContainer">
-        <h2>High Score:<span id="score"></span></h2>
+    <div class="scoreBtnContainer">
+        <button id="clickScore">View High Scores</button>
     </div>
 
     <div class="timeContainer">
@@ -22,7 +22,7 @@
         <button id="startBtn"></button>
     </div>
     <!-- container for entire quiz area -->
-    <div class="quizContainer">
+    <div id="testHidden" class="quizContainer">
         <!-- container for question area -->
         <div class="questionContainer">
             <h2 id=question></h2>
@@ -34,6 +34,21 @@
             </div>
         </div>
     </div>
+
+    <!-- container for high score input -->
+    <div class="highScoreInput">
+        <h2 id="scoreSubTitle">Add your initials!</h2>
+        <form>
+            <input type="text" id="initials" name="initials" placeholder="Initials Here!">
+            <input id="submit" type="submit" value ="Submit">
+        </form>
+    </div>
+    <div>
+        <ul id="scores"></ul>
+    </div>
+
+
+
     <script type="text/javascript" src="./assets/java/script.js"></script>
 </body>
 </html>

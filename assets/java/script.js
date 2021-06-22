@@ -1,16 +1,23 @@
+var quizContainerEl = document.getElementById('quizContainer');
 var question = document.getElementById('question');
-var quizContainer = document.getElementById('quizContainer');
 var optionA = document.getElementById('optionA');
 var optionB = document.getElementById('optionB');
 var optionC = document.getElementById('optionC');
 var optionD = document.getElementById('optionD');
 
-var score = document.getElementById("score");
-var timerElement = document.getElementById("timer")
+var scoreEl = document.getElementById("scores");
+var timerEl = document.getElementById("timer")
 
-var starter = document.getElementById('starter');
+
 var startTitle = document.getElementById('startTitle');
 var startBtn = document.getElementById('startBtn');
+
+var scoreTitleEl = document.getElementById('scoreSubTitle');
+var initialsEl = document.getElementById('initials');
+var submitEl = document.getElementById('submit');
+
+var runScoresEl = document.getElementById('clickScore');
+
 
 // Question object
 var quesList = [ {
@@ -29,51 +36,39 @@ var quesList = [ {
     }
 ]
 
-var scoreCounter = 0;
+
 var currentQuestion = 0;
 var youWin = false;
 var timerCount;
 var timer;
+var scoresAr = [];
 
 
 
 function starterPosition() {
-    getScore();
-
-    question.style.visibility = "hidden";
-    optionA.style.visibility = "hidden";
-    optionB.style.visibility = "hidden";
-    optionC.style.visibility = "hidden";
-    optionD.style.visibility = "hidden";
-    startTitle.style.visibility = "visible";
-    startBtn.style.visibility = "visible";
 
     startTitle.style.fontSize = "x-large";
     startTitle.innerHTML = "Click to start!";
     startBtn.innerHTML = "Start"
 
 
-    startBtn.addEventListener("click", displayQuestion);
+    startBtn.addEventListener("click", activateTimer);
     
 
     return;
 }
 
-function displayQuestion() {
+function activateTimer () {
+    // document.getElementById("testHidden").hidden = true;
     youWin = false;
     timerCount = 70;
     startTimer();
+    displayQuestion();
+}
+
+function displayQuestion() {
 
     var q = quesList[currentQuestion];
-    console.log(currentQuestion);
-
-    question.style.visibility = "visible";
-    optionA.style.visibility = "visible";
-    optionB.style.visibility = "visible";
-    optionC.style.visibility = "visible";
-    optionD.style.visibility = "visible";
-    startTitle.style.visibility = "hidden";
-    startBtn.style.visibility = "hidden";
 
     question.innerHTML = q.question;
     optionA.innerHTML = q.option[0];
@@ -86,21 +81,10 @@ function displayQuestion() {
 
 
 function winner() {
-    question.style.visibility = "hidden";
-    optionA.style.visibility = "hidden";
-    optionB.style.visibility = "hidden";
-    optionC.style.visibility = "hidden";
-    optionD.style.visibility = "hidden";
-    startTitle.style.visibility = "visible";
-    startBtn.style.visibility = "visible";
-
-    startTitle.style.fontSize = "x-large";
-    startTitle.innerHTML = "YOU WIN!";
 
     youWin = true;
 
-    scoreCounter++;
-    setScore();
+    submitEl.addEventListener("click", setScore);
     
     return;
 }
@@ -108,15 +92,12 @@ function winner() {
 function answerCheck(x) {
     if ((x === quesList[currentQuestion].answer) && (currentQuestion < (quesList.length - 1))) {
         answerCorrect();
-        console.log("more questions");
     } else if ((x === quesList[currentQuestion].answer) && (currentQuestion === (quesList.length - 1))) {
-        console.log("a winner is you");
         winner();
     } else {
        answerWrong();
     }
 }
-console.log(currentQuestion)
 
 function answerCorrect() {
     currentQuestion++;
@@ -124,26 +105,41 @@ function answerCorrect() {
 }
 
 function getScore() {
-    var storedScore = localStorage.getItem("scoreCount");
 
-    if (storedScore === null) {
-        scoreCounter = 0;
-    } else {
-        scoreCounter = storedScore;
+    var storedScores = JSON.parse(localStorage.getItem("scoresAr"));
+    if (storedScores !== null) {
+        scoresEl = storedScores;
     }
-    
-    score.innerHTML = scoreCounter;
+    console.log(storedScores);
+
+    for (var i = 0; i < storedScores.length; i++) {
+        var score = storedScores[i];
+        var li = document.createElement("li");
+        
+        li.textContent = score;
+        li.setAttribute("data-index", i);
+        scoreEl.appendChild(li);
+    }
 }
 
 function setScore() {
-    score.textContent = scoreCounter;
-    localStorage.setItem("scoreCount", scoreCounter)
+    var finalScore = ((initials.value) += (timerEl.textContent));
+    
+    if(localStorage.getItem('scoresAr') === null) {
+        scoresAr = [];
+    } else {
+        scoresAr = JSON.parse(localStorage.getItem('scoresAr'));
+    }
+    
+    scoresAr.push(finalScore);
+
+    localStorage.setItem("scoresAr", JSON.stringify(scoresAr))
 }
 
 function startTimer() {
     timer = setInterval(function() {
       timerCount--;
-      timerElement.textContent = timerCount;
+      timerEl.textContent = timerCount;
       if (timerCount >= 0) {
         if (youWin && timerCount > 0) {
           clearInterval(timer);
@@ -151,13 +147,18 @@ function startTimer() {
       }
       if (timerCount === 0) {
         clearInterval(timer);
+        winner();
       }
     }, 1000);
-  }
+}
 
 function answerWrong () {
     timerCount -= 10;
 }
+
+
+runScoresEl.addEventListener('click', getScore);
+
 
 starterPosition();
 
