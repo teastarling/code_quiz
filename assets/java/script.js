@@ -65,7 +65,7 @@ function startTimer() {
           clearInterval(timer);
         }
       }
-      if (timerCount === 0) {
+      if (timerCount <= 0) {
         clearInterval(timer);
         winner();
       }
